@@ -50,5 +50,26 @@ namespace WebAppVendas.Controllers
 				: BadRequest("Erro ao adicionar Filme");
         }
 
+		[HttpPut("id")]
+		public async Task<IActionResult> Put(FilmeRequest request, int id)
+		{
+			if (id <= 0) return BadRequest("Filme inválido");
+
+			var filme = await _repository.BuscaFilmeAsync(id);
+
+			if (filme == null) NotFound("Filme não existe");
+
+			if (string.IsNullOrEmpty(request.Nome)) request.Nome = filme.Nome;
+			if (request.Ano <= 0) request.ProdutoraId = filme.Ano;
+
+			var atualizar = await _repository.AtualizaAsync(request, id);
+
+			return atualizar
+				? Ok("Filme atualizado com sucesso")
+				: BadRequest("Erro ao atualizar Filme");
+
+			
+		}
+
 	}
 }

@@ -22,7 +22,7 @@ namespace WebAppVendas.Repository
 							   f.ano Ano,
 							   p.nome Produtora 
 							from tb_filme f
-							Join tb_produtora p ON f.id = p.id;";
+							Join tb_produtora p ON p.id = f.id_produtora;";
 
 			using var conn = new SqlConnection(connectionString);
 			
@@ -56,9 +56,23 @@ namespace WebAppVendas.Repository
 			return await conn.ExecuteAsync(sql, request) > 0;
 		}
 
-		public Task<bool> AtualizaAsync(FilmeRequest request, int id)
+		public async Task<bool> AtualizaAsync(FilmeRequest request, int id)
 		{
-			throw new NotImplementedException();
+			string sql = @"UPDATE tb_filme SET 
+							nome = @Nome,
+							ano = @Ano
+							WHERE id = @Id";
+
+			var parametros = new DynamicParameters();
+			parametros.Add("Nome", request.Nome);
+			parametros.Add("Ano", request.Ano);
+			parametros.Add("Id", id);
+
+
+
+			using var conn = new SqlConnection(connectionString);
+
+			return await conn.ExecuteAsync(sql, parametros) > 0;
 		}		
 
 		public Task<bool> DeletaAsync(int id)
