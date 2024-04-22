@@ -19,7 +19,19 @@ namespace WebAppVendas.Controllers
 		{
 			var filmes = await _repository.BuscarFilmesAsync();
 
-			return filmes.Any() ? Ok(filmes) : NoContent();
+			return filmes.Any() 
+				? Ok(filmes) 
+				: NoContent();
+		}
+
+		[HttpGet("id")]
+		public async Task<IActionResult> Get(int id)
+		{
+			var filme = await _repository.BuscaFilmeAsync(id);
+
+			return filme != null 
+						? Ok(filme) 
+						: NotFound("Filme não encontrado");
 		}
 
 	}

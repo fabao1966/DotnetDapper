@@ -24,15 +24,24 @@ namespace WebAppVendas.Repository
 							from tb_filme f
 							Join tb_produtora p ON f.id = p.id;";
 
-			using (var conn = new SqlConnection(connectionString))
-			{
-				return await conn.QueryAsync<FilmeResponse>(sql);
-			}
+			using var conn = new SqlConnection(connectionString);
+			
+			return await conn.QueryAsync<FilmeResponse>(sql);
+			
 		}
 
-		public Task<FilmeResponse> BuscaFilmeAsync(int id)
+		public async Task<FilmeResponse> BuscaFilmeAsync(int id)
 		{
-			throw new NotImplementedException();
+			string sql = @"select f.id Id,
+							   f.nome Nome,
+							   f.ano Ano,
+							   p.nome Produtora 
+							from tb_filme f
+							Join tb_produtora p ON f.id = p.id
+							where f.id = @Id;";
+			using var conn = new SqlConnection(connectionString);
+
+			return await conn.QueryFirstOrDefaultAsync<FilmeResponse>(sql, new { Id = id });
 		}
 
 		public Task<bool> AdicionaAsync(FilmeRequest request)
