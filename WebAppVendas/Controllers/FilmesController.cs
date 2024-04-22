@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WebAppVendas.Models;
 using WebAppVendas.Repository;
 
 namespace WebAppVendas.Controllers
@@ -33,6 +34,21 @@ namespace WebAppVendas.Controllers
 						? Ok(filme) 
 						: NotFound("Filme não encontrado");
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> Post(FilmeRequest request)
+		{
+            if (string.IsNullOrEmpty(request.Nome ) || request.Ano <= 0 || request.ProdutoraId <= 0)
+            {
+				return BadRequest("informações inválidas");
+            }
+
+			var adicionar = await _repository.AdicionaAsync(request);
+
+			return adicionar 
+				? Ok("Filma adicionado com sucesso")
+				: BadRequest("Erro ao adicionar Filme");
+        }
 
 	}
 }

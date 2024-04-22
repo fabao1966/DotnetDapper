@@ -44,9 +44,16 @@ namespace WebAppVendas.Repository
 			return await conn.QueryFirstOrDefaultAsync<FilmeResponse>(sql, new { Id = id });
 		}
 
-		public Task<bool> AdicionaAsync(FilmeRequest request)
+		public async Task<bool> AdicionaAsync(FilmeRequest request)
 		{
-			throw new NotImplementedException();
+			string sql = @"INSERT INTO 
+							tb_filme(nome, ano, id_produtora)
+							VALUES	
+							(@Nome, @Ano, @ProdutoraId)";
+
+			using var conn = new SqlConnection(connectionString);
+
+			return await conn.ExecuteAsync(sql, request) > 0;
 		}
 
 		public Task<bool> AtualizaAsync(FilmeRequest request, int id)
