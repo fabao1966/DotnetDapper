@@ -57,7 +57,7 @@ namespace WebAppVendas.Controllers
 
 			var filme = await _repository.BuscaFilmeAsync(id);
 
-			if (filme == null) NotFound("Filme não existe");
+			if (filme == null) return NotFound("Filme não existe");
 
 			if (string.IsNullOrEmpty(request.Nome)) request.Nome = filme.Nome;
 			if (request.Ano <= 0) request.ProdutoraId = filme.Ano;
@@ -66,9 +66,23 @@ namespace WebAppVendas.Controllers
 
 			return atualizar
 				? Ok("Filme atualizado com sucesso")
-				: BadRequest("Erro ao atualizar Filme");
+				: BadRequest("Erro ao atualizar Filme");			
+		}
 
-			
+		[HttpDelete("id")]
+		public async Task<IActionResult> Delete( int id)
+		{
+			if (id <= 0) return BadRequest("Filme inválido");
+
+			var filme = await _repository.BuscaFilmeAsync(id);
+
+			if (filme == null) return NotFound("Filme não existe");
+
+			var deletado = await _repository.DeletaAsync(id);
+
+			return deletado
+				? Ok("Filme deletado com sucesso")
+				: BadRequest("Erro ao deletar Filme");
 		}
 
 	}

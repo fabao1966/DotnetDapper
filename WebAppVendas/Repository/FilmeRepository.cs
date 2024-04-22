@@ -75,9 +75,15 @@ namespace WebAppVendas.Repository
 			return await conn.ExecuteAsync(sql, parametros) > 0;
 		}		
 
-		public Task<bool> DeletaAsync(int id)
+		public async Task<bool> DeletaAsync(int id)
 		{
-			throw new NotImplementedException();
+			string sql = @"DELETE FROM tb_filme 
+							WHERE id = @Id";
+
+			using var conn = new SqlConnection(connectionString);
+
+			return await conn.ExecuteAsync(sql, new {Id = id}) > 0;
+
 		}
 	}
 }
